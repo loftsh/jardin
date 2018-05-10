@@ -5,3 +5,4 @@ Django==2.0.4
 django-rq==1.1.0
 django-rq-scheduler==1.1.1
 python-telegram-handler
+pigpio==1.40.post1
