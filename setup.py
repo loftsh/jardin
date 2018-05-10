@@ -2,7 +2,16 @@
 
 from distutils.core import setup
 
-PACKAGES = ['django']
+PACKAGES = [
+    'Django',
+    'django-rq',
+    'django-rq-scheduler',
+    'redis',
+    'rq',
+    'rq-scheduler',
+    'python-telegram-handler',
+    'pigpio',
+]
 
 setup(
     name='Jardin',
