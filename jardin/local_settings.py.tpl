@@ -6,6 +6,10 @@ SECRET_KEY = 'DJANGO SECRET'
 LOGGING = {
     'version': 1,
     'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'level': 'DEBUG',
+        },
         'telegram_main_chan': {
             'class': 'telegram_handler.TelegramHandler',
             'level': 'ERROR',
@@ -20,8 +24,12 @@ LOGGING = {
         }
     },
     'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG'
+        },
         'loft': {
-            'handlers': ['telegram_main_chan', 'telegram_debug_chan'],
+            'handlers': ['console', 'telegram_main_chan', 'telegram_debug_chan'],
             'level': 'DEBUG'
         }
     }
