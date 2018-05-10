@@ -27,7 +27,7 @@ def allTemperature(request):
     levels3 = list(zip(*levels3))
 
     return render(
-        request, "aquaponie/temperature.html",
+        request, "aquaponie/dashboard.html",
         context={
             'waterLevels': json.dumps(levels),
             'waterLevels1': json.dumps(levels1),
