@@ -1,0 +1,29 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>pump state</title>
+  <script type="text/javascript" src="{% static 'jardin/js/jquery-latest.min.js' %}"></script>
+</head>
+
+<body>
+  <button type="button" onclick="getPumpState()">check state :)</button>
+  <div>
+    <div>pump state</div>
+    <div id="pump_state"></div>
+  </div>
+</body>
+
+<script>
+  function getPumpState() {
+    $.ajax({url: "{% url 'pump_state' %}", success: function(result){
+        $("#pump_state").html(JSON.stringify(result));
+      }
+    });
+  }
+</script> 
+
+</html>
+

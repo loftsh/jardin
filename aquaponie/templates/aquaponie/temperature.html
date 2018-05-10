@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Titre de la page</title>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+  <h1>Le bassin du loft</h1>
+
+  <h2>Température</h2>
+
+  <div class="wrap">
+    <div id="plotWaterLevel" style="width: 100%; display: inline-block;"></div>
+  </div>
+
+  <script>
+    var data = {{ waterLevels|safe }};
+    var data1 = {{ waterLevels1|safe }};
+    var data2 = {{ waterLevels2|safe }};
+    var data3 = {{ waterLevels3|safe }};
+    var trace = [
+      {
+        x: data[0],
+        y: data[1],
+        name: 'moyenne',
+        type: 'scatter',
+      },
+      {
+        x: data1[0],
+        y: data1[1],
+        name: 'mode',
+        type: 'scatter',
+      }, 
+      {
+        x: data2[0],
+        y: data2[1],
+        name: 'median',
+        type: 'scatter',
+      },
+     {
+        x: data3[0],
+        y: data3[1],
+        name: 'regress',
+        type: 'scatter',
+      }
+    ];
+
+    var now = new Date();
+    var begin = new Date();
+    begin.setHours(begin.getHours() - 6);
+
+    var layout = {
+    title: 'Custom Range',
+    xaxis: {
+    range: [begin.getTime(), now.getTime()],
+    type: 'date'
+    },
+    };
+
+    Plotly.newPlot('plotWaterLevel', trace, layout);
+</script>
+</body>
+</html>

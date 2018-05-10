@@ -1,0 +1,7 @@
+redis==2.10.6
+rq==0.10.0
+rq-scheduler==0.8.2
+Django==2.0.4
+django-rq==1.1.0
+django-rq-scheduler==1.1.1
+python-telegram-handler
