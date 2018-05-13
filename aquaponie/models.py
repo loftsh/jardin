@@ -73,3 +73,8 @@ class WaterLevel(models.Model):
     bac = models.CharField(max_length=100)
     date = models.DateTimeField()
     level = models.FloatField()
+
+
+class PumpState(models.Model):
+    date = models.DateTimeField()
+    state = models.BooleanField()
