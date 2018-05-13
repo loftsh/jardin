@@ -41,10 +41,19 @@
     };
 
     Plotly.newPlot('plotTemperature', traceT, layoutT);
-    
+
+    var state = {{ pumpStates|safe }};
     var data = {{ waterLevels|safe }};
     var data2 = {{ waterLevels2|safe }};
     var trace = [
+      {
+        x: state[0],
+        y: state[1],
+        yaxis: 'y2',
+        type:'scatter',
+        fill: 'tozeroy',
+        mode: 'none',
+      },
       {
         x: data[0],
         y: data[1],
@@ -64,14 +73,16 @@
     begin.setHours(begin.getHours() - 6);
 
     var layout = {
-    title: 'Custom Range',
-    xaxis: {
-    range: [begin.getTime(), now.getTime()],
-    type: 'date'
-    },
-    yaxis: {
-    range: [0, 20],
-    },
+      title: 'Custom Range',
+      xaxis: {
+        range: [begin.getTime(), now.getTime()],
+        type: 'date'
+      },
+      yaxis2: {
+       title: 'État de la pompe',
+       overlaying: 'y',
+       side: 'right',
+      }
     };
 
     Plotly.newPlot('plotWaterLevel', trace, layout);

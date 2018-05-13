@@ -5,7 +5,7 @@ import json
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 
-from aquaponie.models import Temperature, WaterLevel
+from aquaponie.models import Temperature, WaterLevel, PumpState
 
 logger = logging.getLogger(__name__)
 
@@ -13,6 +13,10 @@ def allTemperature(request):
     data = list(Temperature.objects.all())
     temperatures = [(str(d.date), d.temperature) for d in data]
     temperatures = list(zip(*temperatures))
+
+    data = list(PumpState.objects.all())
+    states = [(str(d.date), 1 if d.state else 0) for d in data]
+    states = list(zip(*states))
 
     data = list(WaterLevel.objects.filter(bac='culture_med'))
     levels = [(str(d.date), d.level) for d in data]
@@ -26,6 +30,7 @@ def allTemperature(request):
         request, "aquaponie/dashboard.html",
         context={
             'temperatures': json.dumps(temperatures),
+            'pumpStates': json.dumps(states),
             'waterLevels': json.dumps(levels),
             'waterLevels2': json.dumps(levels2),
         }
