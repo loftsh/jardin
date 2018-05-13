@@ -21,7 +21,7 @@ from aquaponie.models import Temperature
 # Config logging
 logger = logging.getLogger('loft')
 
-w1_path = "/sys/bus/w1/devices/28-0214813de5ff/w1_slave"
+w1_path = "/sys/bus/w1/devices/28-051790466dff/w1_slave"
 
 verbose = False
 if len(sys.argv) == 2 and sys.argv[1] == "-v":
