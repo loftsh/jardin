@@ -49,11 +49,17 @@ def measure_level():
     time.sleep(10/1000000.0)
     p.write(trig, 0)
 
+    beginLoop = time.perf_counter()
     while p.read(echo) == 0:  ## Emission de l'ultrason
         debutImpulsion = time.perf_counter()
+        if debutImpulsion - beginLoop > 0.01:
+            raise ValueError("Timeout")
 
+    beginLoop = time.perf_counter()
     while p.read(echo) == 1:   ## Retour de l'Echo
         finImpulsion = time.perf_counter()
+        if finImpulsion - beginLoop > 0.01:
+            raise ValueError("Timeout")
 
     distance = round((finImpulsion - debutImpulsion) * 340.0 * 100.0 / 2.0, 2)
     return distance
@@ -65,8 +71,13 @@ def take_measure(repet, verbose=False):
     for x in range(repet):
         time.sleep(time_sleep) # sleep must be > 60 ms
 
-        distance = measure_level()
-        val.append(distance)
+        try:
+            distance = measure_level()
+        except ValueError:
+            pass
+        else:
+            val.append(distance)
+
         if verbose:
             print(distance)
     return val
