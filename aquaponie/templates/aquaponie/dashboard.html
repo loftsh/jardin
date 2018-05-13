@@ -11,10 +11,37 @@
   <h2>Température</h2>
 
   <div class="wrap">
+    <div id="plotTemperature" style="width: 100%; display: inline-block;"></div>
+  </div>
+
+  <div class="wrap">
     <div id="plotWaterLevel" style="width: 100%; display: inline-block;"></div>
   </div>
 
   <script>
+    var temp = {{ temperatures|safe }};
+    var traceT = [
+      {
+        x: temp[0],
+        y: temp[1],
+        type: 'scatter',
+      },
+    ];
+
+    var now = new Date();
+    var begin = new Date();
+    begin.setHours(begin.getHours() - 12);
+
+    var layoutT = {
+    title: 'Température',
+    xaxis: {
+    range: [begin.getTime(), now.getTime()],
+    type: 'date'
+    },
+    };
+
+    Plotly.newPlot('plotTemperature', traceT, layoutT);
+    
     var data = {{ waterLevels|safe }};
     var data2 = {{ waterLevels2|safe }};
     var trace = [
