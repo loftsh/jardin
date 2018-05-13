@@ -13,6 +13,14 @@ PACKAGES = [
     'pigpio',
 ]
 
+TEST_PACKAGES = PACKAGES + [
+    'flake8',
+]
+
+EXTRAS = {
+    'test': TEST_PACKAGES,
+}
+
 setup(
     name='Jardin',
     version='10.0',
@@ -21,4 +29,6 @@ setup(
     author_email='jardin@sh',
     url='loft.sh',
     install_requires=PACKAGES,
+    test_requires=TEST_PACKAGES,
+    extras_require=EXTRAS,
 )

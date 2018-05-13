@@ -1,5 +1,5 @@
 
-build:
+build: Dockerfile
 	docker-compose build
 
 up: build
@@ -8,4 +8,9 @@ up: build
 logs:
 	docker-compose logs -f
 
-.PHONY: up logs build
+lint:
+	docker-compose exec web flake8 .
+
+test: lint
+
+.PHONY: up logs build test lint
