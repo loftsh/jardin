@@ -15,6 +15,11 @@ PACKAGES = [
 
 TEST_PACKAGES = PACKAGES + [
     'flake8',
+    'flake8-docstrings',
+    'flake8-print',
+    'flake8-import-order',
+    'flake8-strict',
+    'flake8-builtins',
 ]
 
 EXTRAS = {
