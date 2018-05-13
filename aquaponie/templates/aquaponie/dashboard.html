@@ -16,32 +16,18 @@
 
   <script>
     var data = {{ waterLevels|safe }};
-    var data1 = {{ waterLevels1|safe }};
     var data2 = {{ waterLevels2|safe }};
-    var data3 = {{ waterLevels3|safe }};
     var trace = [
       {
         x: data[0],
         y: data[1],
-        name: 'moyenne',
+        name: 'mediane',
         type: 'scatter',
       },
-      {
-        x: data1[0],
-        y: data1[1],
-        name: 'mode',
-        type: 'scatter',
-      }, 
       {
         x: data2[0],
         y: data2[1],
-        name: 'median',
-        type: 'scatter',
-      },
-     {
-        x: data3[0],
-        y: data3[1],
-        name: 'regress',
+        name: 'regression',
         type: 'scatter',
       }
     ];
