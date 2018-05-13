@@ -50,7 +50,8 @@
         x: state[0],
         y: state[1],
         yaxis: 'y2',
-        type:'scatter',
+        name: 'pompe',
+        type: 'scatter',
         fill: 'tozeroy',
         mode: 'none',
       },
@@ -78,10 +79,16 @@
         range: [begin.getTime(), now.getTime()],
         type: 'date'
       },
+      yaxis: {
+        rangemode: 'tozero',
+      },
       yaxis2: {
-       title: 'État de la pompe',
-       overlaying: 'y',
-       side: 'right',
+        title: 'État de la pompe',
+        overlaying: 'y',
+        rangemode: 'tozero',
+        side: 'right',
+        tickvals: [0, 1],
+        ticktext: ['Éteinte', 'Allumée'],
       }
     };
 
