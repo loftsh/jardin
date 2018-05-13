@@ -44,8 +44,8 @@ try:
         tempLog.save()
 
 except IOError as error:
-    logger.error("Can not read temperature sensor datas.\n{}".format(error))
+    logger.warning("Can not read temperature sensor datas.\n{}".format(error))
 except AttributeError as error:
-    logger.error("Can not parse temperature sensor datas.\n{}".format(error))
+    logger.warning("Can not parse temperature sensor datas.\n{}".format(error))
 except Exception as error:
-    logger.error("Error.\n{}".format(error))
+    logger.warning("Error.\n{}".format(error))
