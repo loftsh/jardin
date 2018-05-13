@@ -1,6 +1,8 @@
 Jardin
 ======
 
+[![Build Status](https://travis-ci.com/loftsh/jardin.svg?branch=master)](https://travis-ci.com/loftsh/jardin)
+
 Jardin is a simple Django app to monitor and trigger event in our
 IoT-connected-smart-8.0-otherStupidAdjectives-garden.
 
