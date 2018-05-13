@@ -76,6 +76,13 @@ val = take_measure(repet, verbose=False)
 p.stop()
 
 
+for raw_data in val:
+    raw_level = WaterLevel()
+    raw_level.date = timezone.now()
+    raw_level.level = raw_data
+    raw_level.bac = 'culture_raw'
+    raw_level.save()
+
 level = WaterLevel()
 level.date = timezone.now()
 level.level = origin - mode(val)
