@@ -8,7 +8,7 @@ up: build
 logs:
 	docker-compose logs -f
 
-lint:
+lint: up
 	docker-compose exec web flake8 .
 
 test: lint
