@@ -1,11 +1,10 @@
 #!/usr/bin/python3
 
 import sys
-import pigpio
 import os
-
 import logging
-from logging.config import dictConfig
+
+import pigpio
 
 sys.path.append('/srv/jardin')
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "jardin.settings")
@@ -15,7 +14,6 @@ django.setup()
 from django.utils import timezone
 
 from aquaponie.models import PumpState
-
 
 logger = logging.getLogger('loft')
 
@@ -52,8 +50,11 @@ if __name__ == "__main__":
         pumpStateLog.date = timezone.now()
         pumpStateLog.state = state
         pumpStateLog.save()
-        
-        logger.debug("La pompe est {}.".format("allumée" if state else "éteinte"))
+
+        logger.debug(
+            "La pompe est %s.",
+            "allumée" if state else "éteinte",
+        )
 
     else:
         logger.error("Usage {} on | off | save".format(sys.argv[0]))

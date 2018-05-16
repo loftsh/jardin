@@ -1,16 +1,16 @@
-import datetime
+# import datetime
 
-import django_rq
+# import django_rq
 from django.db import models
 
-from aquaponie.tasks import ebb_rise, ebb_lower
+# from aquaponie.tasks import ebb_lower, ebb_rise
 
 
 class Ebb(models.Model):
     rising = models.DateTimeField(blank=True)
     lowering = models.DateTimeField(blank=True)
 
-    
+
 class ScheduledEbb(models.Model):
     rising = models.TimeField(blank=True)
     log_rising_date = models.DateField(blank=True)
@@ -54,16 +54,15 @@ class ScheduledEbb(models.Model):
     #         sch.enqueue_at(rising_date, self.set_state, state="RI")
 
     #     self.state = state
-           
-           
+
     def save(self, *args, **kwargs):
         if not self.state:
-            scheduler = django_rq.get_scheduler('default')
-            job_id = scheduler.enqueue_at(datetime(2020, 10, 10), ebb_rising)
+            # scheduler = django_rq.get_scheduler('default')
+            # job_id = scheduler.enqueue_at(datetime(2020, 10, 10), ebb_rising)
             self.state = 'QU'
         super().save(*args, **kwargs)
 
-        
+
 class Temperature(models.Model):
     date = models.DateTimeField()
     temperature = models.FloatField()
