@@ -4,7 +4,7 @@ Jardin
 [![Build Status](https://travis-ci.com/loftsh/jardin.svg?branch=master)](https://travis-ci.com/loftsh/jardin)
 
 Jardin is a simple Django app to monitor and trigger event in our
-IoT-connected-smart-8.0-otherStupidAdjectives-garden.
+IoT-connected-smart-8.0-bigdata-machinelearning-stupidAdjectives-garden.
 
 - Aquaponie module handle our aquaponics farm with fish tank and
   culture monitoring and water cycle actions
@@ -13,21 +13,24 @@ IoT-connected-smart-8.0-otherStupidAdjectives-garden.
 
 ## Set up the development environment
 
-You can use Vagrant to setup a VM with our dev env:
+You can use the included dockerfile to setup a dev environment:
 ```
-vagrant up
-vagrant ssh
-cd /code
-```
-
-Then just run Django's migrations and run the server:
-
-```
-python3 manage.py migrate
-python3 manage.py runserver 127.0.0.1:8080
+make up
+make logs
 ```
 
-And browse to 127.0.0.1:8081/
+And browse to 127.0.0.1:8000/
+
+
+## Test suite
+
+The project has a simple test suite:
+
+```
+make test
+```
+
+Please make sure that every test pass before pushing any pull request.
 
 
 ## TODO
