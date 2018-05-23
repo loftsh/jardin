@@ -6,6 +6,8 @@ PACKAGES = [
     'Django',
     'django-rq',
     'django-rq-scheduler',
+    'djangorestframework',
+    'django-filter',
     'redis',
     'rq',
     'rq-scheduler',
