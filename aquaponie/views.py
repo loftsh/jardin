@@ -19,18 +19,21 @@ class PumpStateView(viewsets.ReadOnlyModelViewSet):
     queryset = PumpState.objects.all()
     serializer_class = PumpStateSerializer
     filter_class = PumpStateFilter
+    ordering_fields = ('date',)
 
 
 class TemperatureView(viewsets.ReadOnlyModelViewSet):
     queryset = Temperature.objects.all()
     serializer_class = TemperatureSerializer
     filter_class = TemperatureFilter
+    ordering_fields = ('date',)
 
 
 class WaterLevelView(viewsets.ModelViewSet):
     queryset = WaterLevel.objects.all()
     serializer_class = WaterLevelSerializer
     filter_class = WaterLevelFilter
+    ordering_fields = ('date',)
 
 
 def allTemperature(request):
