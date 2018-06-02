@@ -37,21 +37,14 @@ class WaterLevelView(viewsets.ModelViewSet):
 
 
 def allTemperature(request):
-    data = list(Temperature.objects.order_by('-date')[:1000])
-    temperatures = [(str(d.date), d.temperature) for d in data]
-    temperatures = list(zip(*temperatures))
+    data = reversed(Temperature.objects.order_by('-date')[:1000])
+    temperatures = [{'date': str(d.date), 'temperature': d.temperature} for d in data]
 
-    data = list(PumpState.objects.order_by('-date')[:1000])
-    states = [(str(d.date), 1 if d.state else 0) for d in data]
-    states = list(zip(*states))
+    data = reversed(PumpState.objects.order_by('-date')[:1000])
+    states = [{'date': str(d.date), 'state': 1 if d.state else 0} for d in data]
 
-    data = list(WaterLevel.objects.filter(bac='culture_med').order_by('-date')[:1000])
-    levels = [(str(d.date), d.level) for d in data]
-    levels = list(zip(*levels))
-
-    data = list(WaterLevel.objects.filter(bac='culture_reg').order_by('-date')[:1000])
-    levels2 = [(str(d.date), d.level) for d in data]
-    levels2 = list(zip(*levels2))
+    data = reversed(WaterLevel.objects.filter(bac='culture_med').order_by('-date')[:1000])
+    levels = [{'date': str(d.date), 'level': d.level} for d in data]
 
     return render(
         request, "aquaponie/dashboard.html",
@@ -59,7 +52,6 @@ def allTemperature(request):
             'temperatures': json.dumps(temperatures),
             'pumpStates': json.dumps(states),
             'waterLevels': json.dumps(levels),
-            'waterLevels2': json.dumps(levels2),
         }
     )
 

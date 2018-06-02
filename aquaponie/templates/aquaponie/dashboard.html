@@ -14,85 +14,141 @@
     <div id="plotTemperature" style="width: 100%; display: inline-block;"></div>
   </div>
 
+  <h2>Niveau d'eau</h2>
   <div class="wrap">
     <div id="plotWaterLevel" style="width: 100%; display: inline-block;"></div>
   </div>
 
-  <script>
-    var temp = {{ temperatures|safe }};
-    var traceT = [
-      {
-        x: temp[0],
-        y: temp[1],
-        type: 'scatter',
-      },
-    ];
+  <script type="text/javascript">
+    const API_URL = '/aquaponie/api/';
+    const BACK_POLL_FREQ = 2000;
+    const POLL_FREQ = 60000;
 
-    var now = new Date();
-    var begin = new Date();
+    const graphes = {
+	temperature: {
+	    api_endpoint: 'temperature',
+	    x: 'date',
+	    y: 'temperature',
+	    node: 'plotTemperature',
+	    stacked: 0,
+	    datas: {{ temperatures|safe }},
+	},
+	waterLevel: {
+	    api_endpoint: 'water_level',
+	    api_extra: '&bac=culture_med',
+	    x: 'date',
+	    y: 'level',
+	    node: 'plotWaterLevel',
+	    stacked: 0,
+	    datas: {{ waterLevels|safe }},
+	},
+	pumpState: {
+	    api_endpoint: 'pump_state',
+	    x: 'date',
+	    y: 'state',
+	    node: 'plotWaterLevel',
+	    stacked: 1,
+	    datas: {{ pumpStates|safe }},
+	}
+    }
+
+    function formatData(graph, datas, first = false) {
+	let trace = {
+	    x: [datas.map((d) => d[graph.x])],
+	    y: [datas.map((d) => d[graph.y])]
+	};
+	if (first)
+	    trace = [{ x: trace.x[0], y: trace.y[0], type: 'scatter'}];
+	
+	return trace;
+    }
+
+    function refreshGraph(graph, way, freq) {
+	let url = API_URL + graph.api_endpoint;
+	if (way == 'backward') {
+	    url += "?ordering=-date&date_lt=" + graph.datas[0].date;
+	} else {
+	    url += "?ordering=date&date_gt=" + graph.datas[graph.datas.length - 1].date;
+	}
+	url += (graph.api_extra || '');
+	
+	Plotly.d3.json(url, function(error, figure) {
+	    if (figure) {
+		if (figure.count == 0 && way == 'backward') {
+		    console.log("Back polling complete for " + graph.api_endpoint);
+		    return 0;
+		}
+		
+		if (way == 'backward') {
+		    const datas = figure.results.reverse();
+		    graph.datas = datas.concat(graph.datas);
+		    
+		    Plotly.prependTraces(graph.node, formatData(graph, datas), [graph.stacked]);
+		} else {
+		    const datas = figure.results;
+		    graph.datas = graph.datas.concat(datas);
+		    
+		    Plotly.extendTraces(graph.node, formatData(graph, datas), [graph.stacked]);
+		}
+	    } else {
+		console.log(error);
+	    }
+	    
+	    window.setTimeout(refreshGraph, freq, graph, way, freq);
+	});
+    }
+
+    const now = new Date();
+    const begin = new Date();
     begin.setHours(begin.getHours() - 12);
 
-    var layoutT = {
-    title: 'Température',
-    xaxis: {
-    range: [begin.getTime(), now.getTime()],
-    type: 'date'
-    },
+    const layoutT = {
+	title: 'Température',
+	xaxis: {
+	    type: 'date'
+	},
     };
 
-    Plotly.newPlot('plotTemperature', traceT, layoutT);
-
-    var state = {{ pumpStates|safe }};
-    var data = {{ waterLevels|safe }};
-    var data2 = {{ waterLevels2|safe }};
-    var trace = [
-      {
-        x: state[0],
-        y: state[1],
-        yaxis: 'y2',
-        name: 'pompe',
-        type: 'scatter',
-        fill: 'tozeroy',
-        mode: 'none',
-      },
-      {
-        x: data[0],
-        y: data[1],
-        name: 'mediane',
-        type: 'scatter',
-      },
-      {
-        x: data2[0],
-        y: data2[1],
-        name: 'regression',
-        type: 'scatter',
-      }
-    ];
-
-    var now = new Date();
-    var begin = new Date();
-    begin.setHours(begin.getHours() - 6);
-
-    var layout = {
-      title: 'Custom Range',
-      xaxis: {
-        range: [begin.getTime(), now.getTime()],
-        type: 'date'
-      },
-      yaxis: {
-        rangemode: 'tozero',
-      },
-      yaxis2: {
-        title: 'État de la pompe',
-        overlaying: 'y',
-        rangemode: 'tozero',
-        side: 'right',
-        tickvals: [0, 1],
-        ticktext: ['Éteinte', 'Allumée'],
-      }
+    const layoutM = {
+	title: 'Marées',
+	xaxis: {
+	    //range: [begin.getTime(), now.getTime()],
+	    type: 'date'
+	},
+	yaxis: {
+	    rangemode: 'tozero',
+	},
+	yaxis2: {
+	    title: 'État de la pompe',
+	    overlaying: 'y',
+	    rangemode: 'tozero',
+	    side: 'right',
+	    tickvals: [0, 1],
+	    ticktext: ['Éteinte', 'Allumée'],
+	}
     };
 
-    Plotly.newPlot('plotWaterLevel', trace, layout);
-</script>
+    window.onload = function(e) {
+    	const traceT = formatData(graphes.temperature, graphes.temperature.datas, true);
+    	Plotly.newPlot('plotTemperature', traceT, layoutT);
+	
+    	const traceW = formatData(graphes.waterLevel, graphes.waterLevel.datas, true);
+	const traceP = formatData(graphes.pumpState, graphes.pumpState.datas, true);
+	traceP[0].yaxis = 'y2'; traceP[0].name = 'pompe'; traceP[0].fill = 'tozeroy';
+	traceP.name = 'mediane';
+
+	console.log(traceW);
+	console.log(traceP);
+
+    	Plotly.newPlot('plotWaterLevel', traceW.concat(traceP), layoutM);
+	
+    	// Start polling
+    	for (let g in graphes) {
+    	    refreshGraph(graphes[g], 'backward', BACK_POLL_FREQ);
+    	    refreshGraph(graphes[g], 'forward', POLL_FREQ);
+    	}
+    }
+  </script>
 </body>
 </html>
+ 
