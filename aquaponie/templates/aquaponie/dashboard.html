@@ -23,6 +23,7 @@
     const API_URL = '/aquaponie/api/';
     const BACK_POLL_FREQ = 2000;
     const POLL_FREQ = 60000;
+    const TIME_RANGE = 12;
 
     const graphes = {
 	temperature: {
@@ -89,6 +90,10 @@
 		    graph.datas = graph.datas.concat(datas);
 		    
 		    Plotly.extendTraces(graph.node, formatData(graph, datas), [graph.stacked]);
+
+		    const new_now = new Date();
+		    const layout = { 'xaxis.range': [begin.getTime(), new_now.getTime()] };
+		    Plotly.relayout(graph.node, layout);
 		}
 	    } else {
 		console.log(error);
@@ -98,22 +103,25 @@
 	});
     }
 
+    // Prepare layout for graphes
+
     const now = new Date();
     const begin = new Date();
-    begin.setHours(begin.getHours() - 12);
+    begin.setHours(begin.getHours() - TIME_RANGE);
 
     const layoutT = {
 	title: 'Température',
 	xaxis: {
-	    type: 'date'
+	    type: 'date',
+	    range: [begin.getTime(), now.getTime()]
 	},
     };
 
     const layoutM = {
 	title: 'Marées',
 	xaxis: {
-	    //range: [begin.getTime(), now.getTime()],
-	    type: 'date'
+	    type: 'date',
+	    range: [begin.getTime(), now.getTime()]
 	},
 	yaxis: {
 	    rangemode: 'tozero',
