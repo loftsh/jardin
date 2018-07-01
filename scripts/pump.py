@@ -22,17 +22,22 @@ PUMP_PIN = 6
 
 def set_pump_state(state):
     p = pigpio.pi()
+    before = p.read(PUMP_PIN)
+
     p.write(PUMP_PIN, state)
     p.stop()
 
+    pumpBefore = PumpState()
+    pumpBefore.date = timezone.now()
+    pumpBefore.state = before
+    pumpBefore.save()
+
+    pumpNow = PumpState()
+    pumpNow.date = timezone.now()
+    pumpNow.state = state
+    pumpNow.save()
+
     logger.info("J'{} la pompe !".format("allume" if state else "éteins"))
-
-
-def get_pump_state():
-    p = pigpio.pi()
-    state = p.read(PUMP_PIN)
-    p.stop()
-    return state
 
 
 if __name__ == "__main__":
@@ -43,19 +48,6 @@ if __name__ == "__main__":
     elif len(sys.argv) == 2 and sys.argv[1] == "off":
         set_pump_state(0)
 
-    elif len(sys.argv) == 2 and sys.argv[1] == "save":
-        state = get_pump_state()
-
-        pumpStateLog = PumpState()
-        pumpStateLog.date = timezone.now()
-        pumpStateLog.state = state
-        pumpStateLog.save()
-
-        logger.debug(
-            "La pompe est %s.",
-            "allumée" if state else "éteinte",
-        )
-
     else:
-        logger.error("Usage {} on | off | save".format(sys.argv[0]))
+        logger.error("Usage {} on | off".format(sys.argv[0]))
         sys.exit(1)
